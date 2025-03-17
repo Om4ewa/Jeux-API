@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Site jeux</title>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/2618/2618988.png" alt="Logo" class="logo">
+        </div>
+        <ul>
+            <h2 class="sidebar-titles">Accueil</h2>
+            <li><a href="#">Accueil</a></li>
+            <h2 class="sidebar-titles">Jeux</h2>
+            <li><a href="#">Liste Jeux</a></li>
+            <li><a href="#">Calendrier des sorties</a></li>
+            <h2 class="sidebar-titles">Mes Données</h2>
+            <li><a href="#">Profil</a></li>
+            <li><a href="#">Wishlist</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <div class="search-filter-container">
+            <div class="search-box">
+                <button onclick="searchGames()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/694/694985.png" alt="Rechercher">
+                </button>
+                <input type="text" id="search-input" placeholder="Rechercher..." onkeyup="searchGames()">
+            </div>
+            <div id="filters" style="display: block;">
+                <select id="filter-tags" onchange="searchGames()">
+                    <option value="">Filtrer par tag</option>
+                </select>
+            </div>
+        </div>
+        <div id="results">
+            <ul id="results-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        let timeout = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadTags();
+        });
+
+        function loadTags() {
+            fetch("https://api.rawg.io/api/tags?key=50bff90d9b1c40f1b13c3818b098fd28")
+                .then(response => response.json())
+                .then(data => {
+                    const filterSelect = document.getElementById("filter-tags");
+                    data.results.forEach(tag => {
+                        const option = document.createElement("option");
+                        option.value = tag.id;
+                        option.textContent = tag.name;
+                        filterSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Erreur lors du chargement des tags:", error));
+        }
+
+        function searchGames() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                const query = document.getElementById("search-input").value;
+                const selectedTag = document.getElementById("filter-tags").value;
+                const resultsDiv = document.getElementById("results");
+                const resultsList = document.getElementById("results-list");
+
+                if (!query && !selectedTag) {
+                    resultsDiv.style.display = "none";
+                    resultsList.innerHTML = "";
+                    return;
+                }
+
+                let apiUrl = `https://api.rawg.io/api/games?key=50bff90d9b1c40f1b13c3818b098fd28&search=${query}`;
+
+                if (selectedTag) {
+                    apiUrl += `&tags=${selectedTag}`;
+                }
+
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        displayResults(data.results);
+                    })
+                    .catch(error => console.error('Erreur:', error));
+            }, 300);
+        }
+
+        function displayResults(games) {
+            const resultsDiv = document.getElementById("results");
+            const resultsList = document.getElementById("results-list");
+            resultsList.innerHTML = "";
+
+            if (games.length === 0) {
+                resultsDiv.style.display = "block";
+                resultsList.innerHTML = "<li>Aucun jeu ne remplit les critères.</li>";
+                return;
+            }
+
+            games.forEach((game) => {
+                const gameItem = document.createElement("li");
+                const gameLink = document.createElement("a");
+                gameLink.href = `index2.html?id=${game.id}`;
+                gameLink.textContent = game.name;
+                gameLink.style.textDecoration = "none";
+                gameLink.style.color = "black";
+
+                const gameImage = document.createElement("img");
+                gameImage.src = game.background_image || 'https://via.placeholder.com/50';
+                gameImage.alt = game.name;
+
+                const gameInfo = document.createElement("div");
+                gameInfo.classList.add("game-info");
+                gameInfo.appendChild(gameLink);
+
+                gameItem.appendChild(gameImage);
+                gameItem.appendChild(gameInfo);
+                resultsList.appendChild(gameItem);
+            });
+
+            resultsDiv.style.display = "block";
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    background-color: #333;
+    display: flex;
+    justify-content: space-between;
+    color: #ddd;
+}
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #333;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.logo-container {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.logo {
+    margin-bottom: -40px;
+    max-width: 60%;
+    height: auto;
+}
+.sidebar-titles {
+    margin-top: 35px;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+.sidebar ul li {
+    display: block; /* Pour que l'élément <li> prenne toute la largeur */
+    padding: 10px;
+    margin: 10px 0;
+}
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block; /* Cela permet au lien de prendre toute la largeur de <li> */
+    width: 100%; /* Prend toute la largeur du parent */
+}
+.sidebar ul li:hover {
+    background-color: #444;
+}
+.content {
+    margin-left: 270px;
+    padding: 20px;
+    width: calc(100% - 270px);
+}
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.container {
+    width: 600px;
+    margin-left: 367px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.game-img {
+    width: 600px;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 2px #ddd;
+}
+.game-description-container {
+    width: 600px;
+    margin-top: 25px;
+    text-align: justify;
+}
+.separator-container {
+    width: 600px;
+    height: 1px;
+    background-color: #ddd;
+    margin-top: 25px;
+    flex-shrink: 0;
+}
+.screenshots-container {
+    margin-left: 75px;
+}
+.screenshot-img {
+    width: 400px; /* Taille modifiable */
+    height: auto;
+    margin-bottom: 12px;
+    border-radius: 5px;
+}

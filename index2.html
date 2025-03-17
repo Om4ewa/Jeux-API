@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <title>Détails du Jeu</title>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/2618/2618988.png" alt="Logo" class="logo">
+        </div>
+        <ul>
+            <h2 class="sidebar-titles">Accueil</h2>
+            <li><a href="index.html">Accueil</a></li>
+            <h2 class="sidebar-titles">Jeux</h2>
+            <li><a href="#">Liste Jeux</a></li>
+            <li><a href="#">Calendrier des sorties</a></li>
+            <h2 class="sidebar-titles">Mes Données</h2>
+            <li><a href="#">Profil</a></li>
+            <li><a href="#">Wishlist</a></li>
+        </ul>
+    </div>
+    
+    <div class="container">
+        <h1 id="game-title"></h1>
+        <img id="game-image" src="" alt="Image du jeu" class="game-img">
+        <p class="game-description-container"><b>Description du jeu :</b><span id="game-description"></span></p>
+        <p><b>Date de sortie :</b> <span id="game-release"></span></p>
+        <p><b>Note des joueurs :</b> <span id="game-rating"></span>/5</p>
+        <div class="separator-container"></div>
+    </div>
+    <div class="screenshots-container">
+        <div class="oui">
+            <h1>Images du jeu</h1>
+            <div id="screenshots"></div>
+        </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const gameId = params.get("id");
+            
+            if (gameId) {
+                fetch(`https://api.rawg.io/api/games/${gameId}?key=50bff90d9b1c40f1b13c3818b098fd28`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("game-title").textContent = data.name;
+                        document.getElementById("game-image").src = data.background_image || "https://via.placeholder.com/300";
+                        document.getElementById("game-description").innerHTML = data.description || "Description non disponible";
+                        document.getElementById("game-release").textContent = data.released ? data.released.replace(/-/g, '/') : "Non disponible";
+                        document.getElementById("game-rating").textContent = data.rating ? data.rating.toFixed(1) : "Non noté";
+                    })
+                    .catch(error => {
+                        console.error("Erreur lors du chargement des détails du jeu:", error);
+                        document.getElementById("game-title").textContent = "Erreur de chargement";
+                    });
+                
+                fetch(`https://api.rawg.io/api/games/${gameId}/screenshots?key=50bff90d9b1c40f1b13c3818b098fd28`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const screenshotsContainer = document.getElementById("screenshots");
+                        data.results.forEach(screenshot => {
+                            const img = document.createElement("img");
+                            img.src = screenshot.image;
+                            img.classList.add("screenshot-img");
+                            screenshotsContainer.appendChild(img);
+                        });
+                    })
+                    .catch(error => console.error("Erreur lors du chargement des captures d'écran:", error));
+            } else {
+                document.getElementById("game-title").textContent = "Aucun jeu sélectionné";
+            }
+        });
+    </script>
+</body>
+
+</html>
